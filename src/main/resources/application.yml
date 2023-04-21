@@ -1,0 +1,14 @@
+server:
+  port: 9000
+
+spring:
+  h2:
+    console:
+      enabled: true
+
+logging:
+  level:
+    root: debug
+    org.springframework.security.oauth2: trace
+    org.springframework.security: debug
+
