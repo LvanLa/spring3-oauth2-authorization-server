@@ -1,4 +1,4 @@
-package com.github.lvan.springouth.authentication;
+package com.github.lvan.springouth.authentication.password;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.core.Authentication;
@@ -15,7 +15,7 @@ import org.springframework.util.StringUtils;
 import java.util.*;
 
 
-public class OAhth2ResourceAuthenticationConverter implements AuthenticationConverter {
+public class OAuth2PasswordAuthenticationConverter implements AuthenticationConverter {
 
     private static final String REQUEST_ERROR_URI = "https://datatracker.ietf.org/doc/html/rfc6749#section-5.2";
 
@@ -58,7 +58,7 @@ public class OAhth2ResourceAuthenticationConverter implements AuthenticationConv
                 }
 
             });
-            return new OAuth2ResourceAuthenticationToken(username, password, requestedScopes, clientPrincipal, additionalParameters);
+            return new OAuth2PasswordAuthenticationToken(username, password, requestedScopes, clientPrincipal, additionalParameters);
         }
     }
 

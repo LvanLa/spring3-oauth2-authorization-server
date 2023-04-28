@@ -1,4 +1,4 @@
-package com.github.lvan.springouth.authentication;
+package com.github.lvan.springouth.authentication.password;
 
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
@@ -7,7 +7,6 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.NoUniqueBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
-import org.springframework.core.ResolvableType;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -25,7 +24,6 @@ import org.springframework.security.oauth2.server.authorization.OAuth2Authorizat
 import org.springframework.security.oauth2.server.authorization.OAuth2TokenType;
 import org.springframework.security.oauth2.server.authorization.authentication.OAuth2AccessTokenAuthenticationToken;
 import org.springframework.security.oauth2.server.authorization.authentication.OAuth2ClientAuthenticationToken;
-import org.springframework.security.oauth2.server.authorization.authentication.OAuth2ClientCredentialsAuthenticationToken;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.context.AuthorizationServerContextHolder;
 import org.springframework.security.oauth2.server.authorization.token.*;
@@ -37,7 +35,7 @@ import java.security.Principal;
 import java.util.*;
 
 
-public class OAuth2ResourceAuthenticationProvider implements AuthenticationProvider {
+public class OAuth2PasswordAuthenticationProvider implements AuthenticationProvider {
 
     private static final String ERROR_URI = "https://datatracker.ietf.org/doc/html/rfc6749#section-5.2";
     private final Log logger = LogFactory.getLog(this.getClass());
@@ -46,7 +44,7 @@ public class OAuth2ResourceAuthenticationProvider implements AuthenticationProvi
     private final PasswordEncoder passwordEncoder;
     private final OAuth2TokenGenerator<? extends OAuth2Token> tokenGenerator;
 
-    public OAuth2ResourceAuthenticationProvider(HttpSecurity http, UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
+    public OAuth2PasswordAuthenticationProvider(HttpSecurity http, PasswordEncoder passwordEncoder) {
         Assert.notNull(http, "authorizationService cannot be null");
         Assert.notNull(passwordEncoder, "passwordEncoder cannot be null");
         this.authorizationService = getAuthorizationService(http);
@@ -57,7 +55,7 @@ public class OAuth2ResourceAuthenticationProvider implements AuthenticationProvi
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        OAuth2ResourceAuthenticationToken resourceAuthentication = (OAuth2ResourceAuthenticationToken) authentication;
+        OAuth2PasswordAuthenticationToken resourceAuthentication = (OAuth2PasswordAuthenticationToken) authentication;
         OAuth2ClientAuthenticationToken clientPrincipal = getAuthenticatedClientElseThrowInvalidClient(resourceAuthentication);
         RegisteredClient registeredClient = clientPrincipal.getRegisteredClient();
         if (this.logger.isTraceEnabled()) {
@@ -142,7 +140,7 @@ public class OAuth2ResourceAuthenticationProvider implements AuthenticationProvi
 
     @Override
     public boolean supports(Class<?> authentication) {
-        return OAuth2ResourceAuthenticationToken.class.isAssignableFrom(authentication);
+        return OAuth2PasswordAuthenticationToken.class.isAssignableFrom(authentication);
     }
 
     static OAuth2ClientAuthenticationToken getAuthenticatedClientElseThrowInvalidClient(Authentication authentication) {

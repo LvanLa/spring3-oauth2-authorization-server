@@ -1,4 +1,4 @@
-package com.github.lvan.springouth.authentication;
+package com.github.lvan.springouth.authentication.password;
 
 import jakarta.annotation.Nullable;
 import org.springframework.security.core.Authentication;
@@ -11,7 +11,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class OAuth2ResourceAuthenticationToken extends OAuth2AuthorizationGrantAuthenticationToken {
+public class OAuth2PasswordAuthenticationToken extends OAuth2AuthorizationGrantAuthenticationToken {
 
 
     private final String username;
@@ -20,11 +20,11 @@ public class OAuth2ResourceAuthenticationToken extends OAuth2AuthorizationGrantA
 
     private final Set<String> scopes;
 
-    protected OAuth2ResourceAuthenticationToken(String username, String password, @Nullable Set<String> scopes,
+    protected OAuth2PasswordAuthenticationToken(String username, String password, @Nullable Set<String> scopes,
                                                 Authentication clientPrincipal, Map<String, Object> additionalParameters) {
         super(AuthorizationGrantType.PASSWORD, clientPrincipal, additionalParameters);
         Assert.hasText(username, "username cannot by empty");
-        Assert.hasText(password, "username cannot by empty");
+        Assert.hasText(password, "password cannot by empty");
         this.username = username;
         this.password = password;
         this.scopes = Collections.unmodifiableSet(scopes != null ? new HashSet<>(scopes) : Collections.emptySet());
